@@ -32,7 +32,7 @@ chrome.cast = {
 	 * Describes a sender application platform.
 	 * CHROME:
 	 * IOS:
-	 * ANDROID:
+	 * ANDRO:
 	 * @type {Object}
 	 */
 	SenderPlatform: { CHROME: "chrome", IOS: "ios", ANDROID: "android" },
@@ -1063,7 +1063,7 @@ chrome.cast.getRouteListElement = function() {
 };
 
 chrome.cast.selectDevice = function(id, successCallback, errorCallback) {
-	if (typeof id === 'number') {
+	if (id) {
 		try {
 			chrome.cast._emitConnecting();
 		} catch(e) {
