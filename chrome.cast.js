@@ -1062,6 +1062,37 @@ chrome.cast.getRouteListElement = function() {
 	return _routeListEl;
 };
 
+chrome.cast.selectDevice = function(id, successCallback, errorCallback) {
+	if (typeof id === 'number') {
+		try {
+			chrome.cast._emitConnecting();
+		} catch(e) {
+			console.error('Error in connectingListener', e);
+		}
+
+		execute('selectRoute', id, function(err, obj) {
+			var sessionId = obj.sessionId;
+			var appId = obj.appId;
+			var displayName = obj.displayName;
+			var appImages = obj.appImages || [];
+			var receiver = new chrome.cast.Receiver(obj.receiver.label, obj.receiver.friendlyName, obj.receiver.capabilities || [], obj.volume || null);
+
+			var session = _sessions[sessionId] = new chrome.cast.Session(sessionId, appId, displayName, appImages, receiver);
+
+			_sessionListener && _sessionListener(session);
+			if(err) {
+				errorCallback && errorCallback(err);
+			} else {
+				successCallback && successCallback(obj)
+			}
+		});
+	}
+};
+
+chrome.cast.getRouteList = function() {
+	return _routeList;
+};
+
 
 var _connectingListeners = [];
 chrome.cast.addConnectingListener = function(cb) {
